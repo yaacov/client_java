@@ -20,7 +20,7 @@
 <span class="sourceLineNo">012</span>   * Write out the text version 0.0.4 of the given MetricFamilySamples.<a name="line.12"></a>
 <span class="sourceLineNo">013</span>   */<a name="line.13"></a>
 <span class="sourceLineNo">014</span>  public static void write004(Writer writer, Enumeration&lt;Collector.MetricFamilySamples&gt; mfs) throws IOException {<a name="line.14"></a>
-<span class="sourceLineNo">015</span>    /* See https://docs.google.com/a/boxever.com/document/d/1ZjyKiKxZV83VI9ZKAXRGKaUKK2BIWCT7oiGBKDBpjEY/edit# <a name="line.15"></a>
+<span class="sourceLineNo">015</span>    /* See http://prometheus.io/docs/instrumenting/exposition_formats/<a name="line.15"></a>
 <span class="sourceLineNo">016</span>     * for the output format specification. */<a name="line.16"></a>
 <span class="sourceLineNo">017</span>    for (Collector.MetricFamilySamples metricFamilySamples: Collections.list(mfs)) {<a name="line.17"></a>
 <span class="sourceLineNo">018</span>      writer.write("# HELP " + metricFamilySamples.name + " " + escapeHelp(metricFamilySamples.help) + "\n");<a name="line.18"></a>
@@ -41,7 +41,7 @@
 <span class="sourceLineNo">033</span>  }<a name="line.33"></a>
 <span class="sourceLineNo">034</span><a name="line.34"></a>
 <span class="sourceLineNo">035</span>  /**<a name="line.35"></a>
-<span class="sourceLineNo">036</span>   * Content-type for text verision 0.0.4.<a name="line.36"></a>
+<span class="sourceLineNo">036</span>   * Content-type for text version 0.0.4.<a name="line.36"></a>
 <span class="sourceLineNo">037</span>   */<a name="line.37"></a>
 <span class="sourceLineNo">038</span>  public final static String CONTENT_TYPE_004 = "text/plain; version=0.0.4; charset=utf-8";<a name="line.38"></a>
 <span class="sourceLineNo">039</span><a name="line.39"></a>

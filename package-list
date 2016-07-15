@@ -5,5 +5,8 @@ io.prometheus.client.dropwizard
 io.prometheus.client.exporter
 io.prometheus.client.exporter.common
 io.prometheus.client.hotspot
+io.prometheus.client.jetty
 io.prometheus.client.log4j
 io.prometheus.client.logback
+io.prometheus.client.spring.boot
+io.prometheus.client.vertx
