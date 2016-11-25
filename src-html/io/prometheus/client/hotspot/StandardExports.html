@@ -22,117 +22,113 @@
 <span class="sourceLineNo">014</span>import java.util.logging.Logger;<a name="line.14"></a>
 <span class="sourceLineNo">015</span><a name="line.15"></a>
 <span class="sourceLineNo">016</span>import io.prometheus.client.Collector;<a name="line.16"></a>
-<span class="sourceLineNo">017</span><a name="line.17"></a>
-<span class="sourceLineNo">018</span>/**<a name="line.18"></a>
-<span class="sourceLineNo">019</span> * Exports the standard exports common across all prometheus clients.<a name="line.19"></a>
-<span class="sourceLineNo">020</span> * &lt;p&gt;<a name="line.20"></a>
-<span class="sourceLineNo">021</span> * This includes stats like CPU time spent and memory usage.<a name="line.21"></a>
+<span class="sourceLineNo">017</span>import io.prometheus.client.CounterMetricFamily;<a name="line.17"></a>
+<span class="sourceLineNo">018</span>import io.prometheus.client.GaugeMetricFamily;<a name="line.18"></a>
+<span class="sourceLineNo">019</span><a name="line.19"></a>
+<span class="sourceLineNo">020</span>/**<a name="line.20"></a>
+<span class="sourceLineNo">021</span> * Exports the standard exports common across all prometheus clients.<a name="line.21"></a>
 <span class="sourceLineNo">022</span> * &lt;p&gt;<a name="line.22"></a>
-<span class="sourceLineNo">023</span> * Example usage:<a name="line.23"></a>
-<span class="sourceLineNo">024</span> * &lt;pre&gt;<a name="line.24"></a>
-<span class="sourceLineNo">025</span> * {@code<a name="line.25"></a>
-<span class="sourceLineNo">026</span> *   new StandardExports().register();<a name="line.26"></a>
-<span class="sourceLineNo">027</span> * }<a name="line.27"></a>
-<span class="sourceLineNo">028</span> * &lt;/pre&gt;<a name="line.28"></a>
-<span class="sourceLineNo">029</span> */<a name="line.29"></a>
-<span class="sourceLineNo">030</span>public class StandardExports extends Collector {<a name="line.30"></a>
-<span class="sourceLineNo">031</span>  private static final Logger LOGGER = Logger.getLogger(StandardExports.class.getName());<a name="line.31"></a>
-<span class="sourceLineNo">032</span><a name="line.32"></a>
-<span class="sourceLineNo">033</span>  private final StatusReader statusReader;<a name="line.33"></a>
-<span class="sourceLineNo">034</span>  private final OperatingSystemMXBean osBean;<a name="line.34"></a>
-<span class="sourceLineNo">035</span>  private final RuntimeMXBean runtimeBean;<a name="line.35"></a>
-<span class="sourceLineNo">036</span>  private final boolean unix;<a name="line.36"></a>
-<span class="sourceLineNo">037</span>  private final boolean linux;<a name="line.37"></a>
-<span class="sourceLineNo">038</span><a name="line.38"></a>
-<span class="sourceLineNo">039</span>  public StandardExports() {<a name="line.39"></a>
-<span class="sourceLineNo">040</span>    this(new StatusReader(),<a name="line.40"></a>
-<span class="sourceLineNo">041</span>         (OperatingSystemMXBean)ManagementFactory.getOperatingSystemMXBean(),<a name="line.41"></a>
-<span class="sourceLineNo">042</span>         ManagementFactory.getRuntimeMXBean());<a name="line.42"></a>
-<span class="sourceLineNo">043</span>  }<a name="line.43"></a>
-<span class="sourceLineNo">044</span><a name="line.44"></a>
-<span class="sourceLineNo">045</span>  StandardExports(StatusReader statusReader, OperatingSystemMXBean osBean, RuntimeMXBean runtimeBean) {<a name="line.45"></a>
-<span class="sourceLineNo">046</span>      this.statusReader = statusReader;<a name="line.46"></a>
-<span class="sourceLineNo">047</span>      this.osBean = osBean;<a name="line.47"></a>
-<span class="sourceLineNo">048</span>      this.runtimeBean = runtimeBean;<a name="line.48"></a>
-<span class="sourceLineNo">049</span>      this.unix = (osBean instanceof UnixOperatingSystemMXBean);<a name="line.49"></a>
-<span class="sourceLineNo">050</span>      this.linux = (osBean.getName().indexOf("Linux") == 0);<a name="line.50"></a>
-<span class="sourceLineNo">051</span>  }<a name="line.51"></a>
-<span class="sourceLineNo">052</span><a name="line.52"></a>
-<span class="sourceLineNo">053</span>  private static MetricFamilySamples singleMetric(String name, Type type, String help, double value) {<a name="line.53"></a>
-<span class="sourceLineNo">054</span>    List&lt;MetricFamilySamples.Sample&gt; samples = Collections.singletonList(<a name="line.54"></a>
-<span class="sourceLineNo">055</span>        new MetricFamilySamples.Sample(name, Collections.&lt;String&gt;emptyList(), Collections.&lt;String&gt;emptyList(), value));<a name="line.55"></a>
-<span class="sourceLineNo">056</span>    return new MetricFamilySamples(name, type, help, samples);<a name="line.56"></a>
-<span class="sourceLineNo">057</span>  }<a name="line.57"></a>
-<span class="sourceLineNo">058</span><a name="line.58"></a>
-<span class="sourceLineNo">059</span>  private final static double KB = 1024;<a name="line.59"></a>
-<span class="sourceLineNo">060</span><a name="line.60"></a>
-<span class="sourceLineNo">061</span>  public List&lt;MetricFamilySamples&gt; collect() {<a name="line.61"></a>
-<span class="sourceLineNo">062</span>    List&lt;MetricFamilySamples&gt; mfs = new ArrayList&lt;MetricFamilySamples&gt;();<a name="line.62"></a>
-<span class="sourceLineNo">063</span><a name="line.63"></a>
-<span class="sourceLineNo">064</span>    mfs.add(singleMetric("process_cpu_seconds_total", Type.COUNTER, "Total user and system CPU time spent in seconds.",<a name="line.64"></a>
-<span class="sourceLineNo">065</span>        osBean.getProcessCpuTime() / NANOSECONDS_PER_SECOND));<a name="line.65"></a>
-<span class="sourceLineNo">066</span><a name="line.66"></a>
-<span class="sourceLineNo">067</span>    mfs.add(singleMetric("process_start_time_seconds", Type.GAUGE, "Start time of the process since unix epoch in seconds.",<a name="line.67"></a>
-<span class="sourceLineNo">068</span>        runtimeBean.getStartTime() / MILLISECONDS_PER_SECOND));<a name="line.68"></a>
-<span class="sourceLineNo">069</span><a name="line.69"></a>
-<span class="sourceLineNo">070</span>    if (unix) {<a name="line.70"></a>
-<span class="sourceLineNo">071</span>      UnixOperatingSystemMXBean unixBean = (UnixOperatingSystemMXBean) osBean;<a name="line.71"></a>
-<span class="sourceLineNo">072</span>      mfs.add(singleMetric("process_open_fds", Type.GAUGE, "Number of open file descriptors.",<a name="line.72"></a>
-<span class="sourceLineNo">073</span>          unixBean.getOpenFileDescriptorCount()));<a name="line.73"></a>
-<span class="sourceLineNo">074</span>      mfs.add(singleMetric("process_max_fds", Type.GAUGE, "Maximum number of open file descriptors.",<a name="line.74"></a>
-<span class="sourceLineNo">075</span>          unixBean.getMaxFileDescriptorCount()));<a name="line.75"></a>
-<span class="sourceLineNo">076</span>    }<a name="line.76"></a>
-<span class="sourceLineNo">077</span><a name="line.77"></a>
-<span class="sourceLineNo">078</span>    // There's no standard Java or POSIX way to get memory stats,<a name="line.78"></a>
-<span class="sourceLineNo">079</span>    // so add support for just Linux for now.<a name="line.79"></a>
-<span class="sourceLineNo">080</span>    if (linux) {<a name="line.80"></a>
-<span class="sourceLineNo">081</span>      try {<a name="line.81"></a>
-<span class="sourceLineNo">082</span>      collectMemoryMetricsLinux(mfs);<a name="line.82"></a>
-<span class="sourceLineNo">083</span>      } catch (Exception e) {<a name="line.83"></a>
-<span class="sourceLineNo">084</span>        // If the format changes, log a warning and return what we can.<a name="line.84"></a>
-<span class="sourceLineNo">085</span>        LOGGER.warning(e.toString());<a name="line.85"></a>
-<span class="sourceLineNo">086</span>      }<a name="line.86"></a>
-<span class="sourceLineNo">087</span>    }<a name="line.87"></a>
-<span class="sourceLineNo">088</span>    return mfs;<a name="line.88"></a>
-<span class="sourceLineNo">089</span>  }<a name="line.89"></a>
-<span class="sourceLineNo">090</span><a name="line.90"></a>
-<span class="sourceLineNo">091</span>  void collectMemoryMetricsLinux(List&lt;MetricFamilySamples&gt; mfs) {<a name="line.91"></a>
-<span class="sourceLineNo">092</span>    // statm/stat report in pages, and it's non-trivial to get pagesize from Java<a name="line.92"></a>
-<span class="sourceLineNo">093</span>    // so we parse status instead.<a name="line.93"></a>
-<span class="sourceLineNo">094</span>    BufferedReader br = null;<a name="line.94"></a>
-<span class="sourceLineNo">095</span>    try {<a name="line.95"></a>
-<span class="sourceLineNo">096</span>      br = statusReader.procSelfStatusReader();<a name="line.96"></a>
-<span class="sourceLineNo">097</span>      String line;<a name="line.97"></a>
-<span class="sourceLineNo">098</span>      while ((line = br.readLine()) != null) {<a name="line.98"></a>
-<span class="sourceLineNo">099</span>        if (line.startsWith("VmSize:")) {<a name="line.99"></a>
-<span class="sourceLineNo">100</span>          mfs.add(singleMetric("process_virtual_memory_bytes", Type.GAUGE,<a name="line.100"></a>
-<span class="sourceLineNo">101</span>              "Virtual memory size in bytes.",<a name="line.101"></a>
+<span class="sourceLineNo">023</span> * This includes stats like CPU time spent and memory usage.<a name="line.23"></a>
+<span class="sourceLineNo">024</span> * &lt;p&gt;<a name="line.24"></a>
+<span class="sourceLineNo">025</span> * Example usage:<a name="line.25"></a>
+<span class="sourceLineNo">026</span> * &lt;pre&gt;<a name="line.26"></a>
+<span class="sourceLineNo">027</span> * {@code<a name="line.27"></a>
+<span class="sourceLineNo">028</span> *   new StandardExports().register();<a name="line.28"></a>
+<span class="sourceLineNo">029</span> * }<a name="line.29"></a>
+<span class="sourceLineNo">030</span> * &lt;/pre&gt;<a name="line.30"></a>
+<span class="sourceLineNo">031</span> */<a name="line.31"></a>
+<span class="sourceLineNo">032</span>public class StandardExports extends Collector {<a name="line.32"></a>
+<span class="sourceLineNo">033</span>  private static final Logger LOGGER = Logger.getLogger(StandardExports.class.getName());<a name="line.33"></a>
+<span class="sourceLineNo">034</span><a name="line.34"></a>
+<span class="sourceLineNo">035</span>  private final StatusReader statusReader;<a name="line.35"></a>
+<span class="sourceLineNo">036</span>  private final OperatingSystemMXBean osBean;<a name="line.36"></a>
+<span class="sourceLineNo">037</span>  private final RuntimeMXBean runtimeBean;<a name="line.37"></a>
+<span class="sourceLineNo">038</span>  private final boolean unix;<a name="line.38"></a>
+<span class="sourceLineNo">039</span>  private final boolean linux;<a name="line.39"></a>
+<span class="sourceLineNo">040</span><a name="line.40"></a>
+<span class="sourceLineNo">041</span>  public StandardExports() {<a name="line.41"></a>
+<span class="sourceLineNo">042</span>    this(new StatusReader(),<a name="line.42"></a>
+<span class="sourceLineNo">043</span>         (OperatingSystemMXBean)ManagementFactory.getOperatingSystemMXBean(),<a name="line.43"></a>
+<span class="sourceLineNo">044</span>         ManagementFactory.getRuntimeMXBean());<a name="line.44"></a>
+<span class="sourceLineNo">045</span>  }<a name="line.45"></a>
+<span class="sourceLineNo">046</span><a name="line.46"></a>
+<span class="sourceLineNo">047</span>  StandardExports(StatusReader statusReader, OperatingSystemMXBean osBean, RuntimeMXBean runtimeBean) {<a name="line.47"></a>
+<span class="sourceLineNo">048</span>      this.statusReader = statusReader;<a name="line.48"></a>
+<span class="sourceLineNo">049</span>      this.osBean = osBean;<a name="line.49"></a>
+<span class="sourceLineNo">050</span>      this.runtimeBean = runtimeBean;<a name="line.50"></a>
+<span class="sourceLineNo">051</span>      this.unix = (osBean instanceof UnixOperatingSystemMXBean);<a name="line.51"></a>
+<span class="sourceLineNo">052</span>      this.linux = (osBean.getName().indexOf("Linux") == 0);<a name="line.52"></a>
+<span class="sourceLineNo">053</span>  }<a name="line.53"></a>
+<span class="sourceLineNo">054</span><a name="line.54"></a>
+<span class="sourceLineNo">055</span>  private final static double KB = 1024;<a name="line.55"></a>
+<span class="sourceLineNo">056</span><a name="line.56"></a>
+<span class="sourceLineNo">057</span>  public List&lt;MetricFamilySamples&gt; collect() {<a name="line.57"></a>
+<span class="sourceLineNo">058</span>    List&lt;MetricFamilySamples&gt; mfs = new ArrayList&lt;MetricFamilySamples&gt;();<a name="line.58"></a>
+<span class="sourceLineNo">059</span><a name="line.59"></a>
+<span class="sourceLineNo">060</span>    mfs.add(new CounterMetricFamily("process_cpu_seconds_total", "Total user and system CPU time spent in seconds.",<a name="line.60"></a>
+<span class="sourceLineNo">061</span>        osBean.getProcessCpuTime() / NANOSECONDS_PER_SECOND));<a name="line.61"></a>
+<span class="sourceLineNo">062</span><a name="line.62"></a>
+<span class="sourceLineNo">063</span>    mfs.add(new GaugeMetricFamily("process_start_time_seconds","Start time of the process since unix epoch in seconds.",<a name="line.63"></a>
+<span class="sourceLineNo">064</span>        runtimeBean.getStartTime() / MILLISECONDS_PER_SECOND));<a name="line.64"></a>
+<span class="sourceLineNo">065</span><a name="line.65"></a>
+<span class="sourceLineNo">066</span>    if (unix) {<a name="line.66"></a>
+<span class="sourceLineNo">067</span>      UnixOperatingSystemMXBean unixBean = (UnixOperatingSystemMXBean) osBean;<a name="line.67"></a>
+<span class="sourceLineNo">068</span>      mfs.add(new GaugeMetricFamily("process_open_fds", "Number of open file descriptors.",<a name="line.68"></a>
+<span class="sourceLineNo">069</span>          unixBean.getOpenFileDescriptorCount()));<a name="line.69"></a>
+<span class="sourceLineNo">070</span>      mfs.add(new GaugeMetricFamily("process_max_fds", "Maximum number of open file descriptors.",<a name="line.70"></a>
+<span class="sourceLineNo">071</span>          unixBean.getMaxFileDescriptorCount()));<a name="line.71"></a>
+<span class="sourceLineNo">072</span>    }<a name="line.72"></a>
+<span class="sourceLineNo">073</span><a name="line.73"></a>
+<span class="sourceLineNo">074</span>    // There's no standard Java or POSIX way to get memory stats,<a name="line.74"></a>
+<span class="sourceLineNo">075</span>    // so add support for just Linux for now.<a name="line.75"></a>
+<span class="sourceLineNo">076</span>    if (linux) {<a name="line.76"></a>
+<span class="sourceLineNo">077</span>      try {<a name="line.77"></a>
+<span class="sourceLineNo">078</span>      collectMemoryMetricsLinux(mfs);<a name="line.78"></a>
+<span class="sourceLineNo">079</span>      } catch (Exception e) {<a name="line.79"></a>
+<span class="sourceLineNo">080</span>        // If the format changes, log a warning and return what we can.<a name="line.80"></a>
+<span class="sourceLineNo">081</span>        LOGGER.warning(e.toString());<a name="line.81"></a>
+<span class="sourceLineNo">082</span>      }<a name="line.82"></a>
+<span class="sourceLineNo">083</span>    }<a name="line.83"></a>
+<span class="sourceLineNo">084</span>    return mfs;<a name="line.84"></a>
+<span class="sourceLineNo">085</span>  }<a name="line.85"></a>
+<span class="sourceLineNo">086</span><a name="line.86"></a>
+<span class="sourceLineNo">087</span>  void collectMemoryMetricsLinux(List&lt;MetricFamilySamples&gt; mfs) {<a name="line.87"></a>
+<span class="sourceLineNo">088</span>    // statm/stat report in pages, and it's non-trivial to get pagesize from Java<a name="line.88"></a>
+<span class="sourceLineNo">089</span>    // so we parse status instead.<a name="line.89"></a>
+<span class="sourceLineNo">090</span>    BufferedReader br = null;<a name="line.90"></a>
+<span class="sourceLineNo">091</span>    try {<a name="line.91"></a>
+<span class="sourceLineNo">092</span>      br = statusReader.procSelfStatusReader();<a name="line.92"></a>
+<span class="sourceLineNo">093</span>      String line;<a name="line.93"></a>
+<span class="sourceLineNo">094</span>      while ((line = br.readLine()) != null) {<a name="line.94"></a>
+<span class="sourceLineNo">095</span>        if (line.startsWith("VmSize:")) {<a name="line.95"></a>
+<span class="sourceLineNo">096</span>          mfs.add(new GaugeMetricFamily("process_virtual_memory_bytes",<a name="line.96"></a>
+<span class="sourceLineNo">097</span>              "Virtual memory size in bytes.",<a name="line.97"></a>
+<span class="sourceLineNo">098</span>              Float.parseFloat(line.split("\\s+")[1]) * KB));<a name="line.98"></a>
+<span class="sourceLineNo">099</span>        } else if (line.startsWith("VmRSS:")) {<a name="line.99"></a>
+<span class="sourceLineNo">100</span>          mfs.add(new GaugeMetricFamily("process_resident_memory_bytes",<a name="line.100"></a>
+<span class="sourceLineNo">101</span>              "Resident memory size in bytes.",<a name="line.101"></a>
 <span class="sourceLineNo">102</span>              Float.parseFloat(line.split("\\s+")[1]) * KB));<a name="line.102"></a>
-<span class="sourceLineNo">103</span>        } else if (line.startsWith("VmRSS:")) {<a name="line.103"></a>
-<span class="sourceLineNo">104</span>          mfs.add(singleMetric("process_resident_memory_bytes", Type.GAUGE,<a name="line.104"></a>
-<span class="sourceLineNo">105</span>              "Resident memory size in bytes.",<a name="line.105"></a>
-<span class="sourceLineNo">106</span>              Float.parseFloat(line.split("\\s+")[1]) * KB));<a name="line.106"></a>
-<span class="sourceLineNo">107</span>        }<a name="line.107"></a>
-<span class="sourceLineNo">108</span>      }<a name="line.108"></a>
-<span class="sourceLineNo">109</span>    } catch (IOException e) {<a name="line.109"></a>
-<span class="sourceLineNo">110</span>      LOGGER.fine(e.toString());<a name="line.110"></a>
-<span class="sourceLineNo">111</span>    } finally {<a name="line.111"></a>
-<span class="sourceLineNo">112</span>      if (br != null) {<a name="line.112"></a>
-<span class="sourceLineNo">113</span>        try {<a name="line.113"></a>
-<span class="sourceLineNo">114</span>          br.close();<a name="line.114"></a>
-<span class="sourceLineNo">115</span>        } catch (IOException e) {<a name="line.115"></a>
-<span class="sourceLineNo">116</span>          LOGGER.fine(e.toString());<a name="line.116"></a>
-<span class="sourceLineNo">117</span>        }<a name="line.117"></a>
-<span class="sourceLineNo">118</span>      }<a name="line.118"></a>
-<span class="sourceLineNo">119</span>    }<a name="line.119"></a>
-<span class="sourceLineNo">120</span>  }<a name="line.120"></a>
-<span class="sourceLineNo">121</span><a name="line.121"></a>
-<span class="sourceLineNo">122</span>  static class StatusReader {<a name="line.122"></a>
-<span class="sourceLineNo">123</span>    BufferedReader procSelfStatusReader() throws FileNotFoundException {<a name="line.123"></a>
-<span class="sourceLineNo">124</span>      return new BufferedReader(new FileReader("/proc/self/status"));<a name="line.124"></a>
-<span class="sourceLineNo">125</span>    }<a name="line.125"></a>
-<span class="sourceLineNo">126</span>  }<a name="line.126"></a>
-<span class="sourceLineNo">127</span>}<a name="line.127"></a>
+<span class="sourceLineNo">103</span>        }<a name="line.103"></a>
+<span class="sourceLineNo">104</span>      }<a name="line.104"></a>
+<span class="sourceLineNo">105</span>    } catch (IOException e) {<a name="line.105"></a>
+<span class="sourceLineNo">106</span>      LOGGER.fine(e.toString());<a name="line.106"></a>
+<span class="sourceLineNo">107</span>    } finally {<a name="line.107"></a>
+<span class="sourceLineNo">108</span>      if (br != null) {<a name="line.108"></a>
+<span class="sourceLineNo">109</span>        try {<a name="line.109"></a>
+<span class="sourceLineNo">110</span>          br.close();<a name="line.110"></a>
+<span class="sourceLineNo">111</span>        } catch (IOException e) {<a name="line.111"></a>
+<span class="sourceLineNo">112</span>          LOGGER.fine(e.toString());<a name="line.112"></a>
+<span class="sourceLineNo">113</span>        }<a name="line.113"></a>
+<span class="sourceLineNo">114</span>      }<a name="line.114"></a>
+<span class="sourceLineNo">115</span>    }<a name="line.115"></a>
+<span class="sourceLineNo">116</span>  }<a name="line.116"></a>
+<span class="sourceLineNo">117</span><a name="line.117"></a>
+<span class="sourceLineNo">118</span>  static class StatusReader {<a name="line.118"></a>
+<span class="sourceLineNo">119</span>    BufferedReader procSelfStatusReader() throws FileNotFoundException {<a name="line.119"></a>
+<span class="sourceLineNo">120</span>      return new BufferedReader(new FileReader("/proc/self/status"));<a name="line.120"></a>
+<span class="sourceLineNo">121</span>    }<a name="line.121"></a>
+<span class="sourceLineNo">122</span>  }<a name="line.122"></a>
+<span class="sourceLineNo">123</span>}<a name="line.123"></a>
 
 
 
