@@ -48,7 +48,7 @@
 <span class="sourceLineNo">040</span>        double value = metric.getValue().doubleValue();<a name="line.40"></a>
 <span class="sourceLineNo">041</span>        MetricFamilySamples metricFamilySamples = new MetricFamilySamples(<a name="line.41"></a>
 <span class="sourceLineNo">042</span>                name, Type.GAUGE, name, Collections.singletonList(<a name="line.42"></a>
-<span class="sourceLineNo">043</span>                new MetricFamilySamples.Sample(name, new ArrayList&lt;String&gt;(), new ArrayList&lt;String&gt;(), value)));<a name="line.43"></a>
+<span class="sourceLineNo">043</span>                new MetricFamilySamples.Sample(name, Collections.&lt;String&gt;emptyList(), Collections.&lt;String&gt;emptyList(), value)));<a name="line.43"></a>
 <span class="sourceLineNo">044</span>        samples.add(metricFamilySamples);<a name="line.44"></a>
 <span class="sourceLineNo">045</span>      }<a name="line.45"></a>
 <span class="sourceLineNo">046</span>    }<a name="line.46"></a>
