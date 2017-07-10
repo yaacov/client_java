@@ -23,32 +23,33 @@
 <span class="sourceLineNo">015</span><a name="line.15"></a>
 <span class="sourceLineNo">016</span>@ConfigurationProperties("endpoints.prometheus")<a name="line.16"></a>
 <span class="sourceLineNo">017</span>public class PrometheusMvcEndpoint extends EndpointMvcAdapter {<a name="line.17"></a>
-<span class="sourceLineNo">018</span>  private final PrometheusEndpoint delgate;<a name="line.18"></a>
-<span class="sourceLineNo">019</span><a name="line.19"></a>
-<span class="sourceLineNo">020</span>  public PrometheusMvcEndpoint(PrometheusEndpoint delegate) {<a name="line.20"></a>
-<span class="sourceLineNo">021</span>    super(delegate);<a name="line.21"></a>
-<span class="sourceLineNo">022</span>    this.delgate = delegate;<a name="line.22"></a>
-<span class="sourceLineNo">023</span>  }<a name="line.23"></a>
-<span class="sourceLineNo">024</span><a name="line.24"></a>
-<span class="sourceLineNo">025</span>  @RequestMapping(<a name="line.25"></a>
-<span class="sourceLineNo">026</span>          method = {RequestMethod.GET},<a name="line.26"></a>
-<span class="sourceLineNo">027</span>          produces = {TextFormat.CONTENT_TYPE_004}<a name="line.27"></a>
-<span class="sourceLineNo">028</span>  )<a name="line.28"></a>
-<span class="sourceLineNo">029</span>  @ResponseBody<a name="line.29"></a>
-<span class="sourceLineNo">030</span>  public ResponseEntity value(<a name="line.30"></a>
-<span class="sourceLineNo">031</span>          @RequestParam(value = "name[]", required = false) Set&lt;String&gt; name) {<a name="line.31"></a>
-<span class="sourceLineNo">032</span>    if (!getDelegate().isEnabled()) {<a name="line.32"></a>
-<span class="sourceLineNo">033</span>      // Shouldn't happen - MVC endpoint shouldn't be registered when delegate's<a name="line.33"></a>
-<span class="sourceLineNo">034</span>      // disabled<a name="line.34"></a>
-<span class="sourceLineNo">035</span>      return getDisabledResponse();<a name="line.35"></a>
-<span class="sourceLineNo">036</span>    }<a name="line.36"></a>
-<span class="sourceLineNo">037</span><a name="line.37"></a>
-<span class="sourceLineNo">038</span>    String result = delgate.writeRegistry(name);<a name="line.38"></a>
-<span class="sourceLineNo">039</span>    return ResponseEntity.ok()<a name="line.39"></a>
-<span class="sourceLineNo">040</span>            .header(CONTENT_TYPE, TextFormat.CONTENT_TYPE_004)<a name="line.40"></a>
-<span class="sourceLineNo">041</span>            .body(result);<a name="line.41"></a>
-<span class="sourceLineNo">042</span>  }<a name="line.42"></a>
-<span class="sourceLineNo">043</span>}<a name="line.43"></a>
+<span class="sourceLineNo">018</span><a name="line.18"></a>
+<span class="sourceLineNo">019</span>  private final PrometheusEndpoint delgate;<a name="line.19"></a>
+<span class="sourceLineNo">020</span><a name="line.20"></a>
+<span class="sourceLineNo">021</span>  public PrometheusMvcEndpoint(PrometheusEndpoint delegate) {<a name="line.21"></a>
+<span class="sourceLineNo">022</span>    super(delegate);<a name="line.22"></a>
+<span class="sourceLineNo">023</span>    this.delgate = delegate;<a name="line.23"></a>
+<span class="sourceLineNo">024</span>  }<a name="line.24"></a>
+<span class="sourceLineNo">025</span><a name="line.25"></a>
+<span class="sourceLineNo">026</span>  @RequestMapping(<a name="line.26"></a>
+<span class="sourceLineNo">027</span>          method = {RequestMethod.GET},<a name="line.27"></a>
+<span class="sourceLineNo">028</span>          produces = { "*/*" }<a name="line.28"></a>
+<span class="sourceLineNo">029</span>  )<a name="line.29"></a>
+<span class="sourceLineNo">030</span>  @ResponseBody<a name="line.30"></a>
+<span class="sourceLineNo">031</span>  public ResponseEntity value(<a name="line.31"></a>
+<span class="sourceLineNo">032</span>          @RequestParam(value = "name[]", required = false, defaultValue = "") Set&lt;String&gt; name) {<a name="line.32"></a>
+<span class="sourceLineNo">033</span>    if (!getDelegate().isEnabled()) {<a name="line.33"></a>
+<span class="sourceLineNo">034</span>      // Shouldn't happen - MVC endpoint shouldn't be registered when delegate's<a name="line.34"></a>
+<span class="sourceLineNo">035</span>      // disabled<a name="line.35"></a>
+<span class="sourceLineNo">036</span>      return getDisabledResponse();<a name="line.36"></a>
+<span class="sourceLineNo">037</span>    }<a name="line.37"></a>
+<span class="sourceLineNo">038</span><a name="line.38"></a>
+<span class="sourceLineNo">039</span>    String result = delgate.writeRegistry(name);<a name="line.39"></a>
+<span class="sourceLineNo">040</span>    return ResponseEntity.ok()<a name="line.40"></a>
+<span class="sourceLineNo">041</span>            .header(CONTENT_TYPE, TextFormat.CONTENT_TYPE_004)<a name="line.41"></a>
+<span class="sourceLineNo">042</span>            .body(result);<a name="line.42"></a>
+<span class="sourceLineNo">043</span>  }<a name="line.43"></a>
+<span class="sourceLineNo">044</span>}<a name="line.44"></a>
 
 
 
