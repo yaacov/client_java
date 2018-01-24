@@ -44,28 +44,30 @@
 <span class="sourceLineNo">036</span>            QueuedThreadPool::getThreads),<a name="line.36"></a>
 <span class="sourceLineNo">037</span>        buildGauge("jetty_queued_thread_pool_threads_idle", "Number of idle threads",<a name="line.37"></a>
 <span class="sourceLineNo">038</span>            QueuedThreadPool::getIdleThreads),<a name="line.38"></a>
-<span class="sourceLineNo">039</span>        buildGauge("jetty_queued_thread_pool_jobs", "Number of total jobs",<a name="line.39"></a>
-<span class="sourceLineNo">040</span>            QueuedThreadPool::getQueueSize));<a name="line.40"></a>
-<span class="sourceLineNo">041</span>  }<a name="line.41"></a>
-<span class="sourceLineNo">042</span><a name="line.42"></a>
-<span class="sourceLineNo">043</span>  @Override<a name="line.43"></a>
-<span class="sourceLineNo">044</span>  public &lt;T extends Collector&gt; T register(CollectorRegistry registry) {<a name="line.44"></a>
-<span class="sourceLineNo">045</span>    if (queuedThreadPoolMap.isEmpty()) {<a name="line.45"></a>
-<span class="sourceLineNo">046</span>      throw new IllegalStateException("You must register at least one QueuedThreadPool.");<a name="line.46"></a>
-<span class="sourceLineNo">047</span>    }<a name="line.47"></a>
-<span class="sourceLineNo">048</span>    return super.register(registry);<a name="line.48"></a>
-<span class="sourceLineNo">049</span>  }<a name="line.49"></a>
-<span class="sourceLineNo">050</span><a name="line.50"></a>
-<span class="sourceLineNo">051</span>  private GaugeMetricFamily buildGauge(String metric, String help,<a name="line.51"></a>
-<span class="sourceLineNo">052</span>      Function&lt;QueuedThreadPool, Integer&gt; metricValueProvider) {<a name="line.52"></a>
-<span class="sourceLineNo">053</span>    final GaugeMetricFamily metricFamily = new GaugeMetricFamily(metric, help, LABEL_NAMES);<a name="line.53"></a>
-<span class="sourceLineNo">054</span>    queuedThreadPoolMap.forEach((key, value) -&gt; metricFamily.addMetric(<a name="line.54"></a>
-<span class="sourceLineNo">055</span>        Collections.singletonList(key),<a name="line.55"></a>
-<span class="sourceLineNo">056</span>        metricValueProvider.apply(value)<a name="line.56"></a>
-<span class="sourceLineNo">057</span>    ));<a name="line.57"></a>
-<span class="sourceLineNo">058</span>    return metricFamily;<a name="line.58"></a>
-<span class="sourceLineNo">059</span>  }<a name="line.59"></a>
-<span class="sourceLineNo">060</span>}<a name="line.60"></a>
+<span class="sourceLineNo">039</span>        buildGauge("jetty_queued_thread_pool_threads_max", "Max size of thread pool",<a name="line.39"></a>
+<span class="sourceLineNo">040</span>            QueuedThreadPool::getMaxThreads),<a name="line.40"></a>
+<span class="sourceLineNo">041</span>        buildGauge("jetty_queued_thread_pool_jobs", "Number of total jobs",<a name="line.41"></a>
+<span class="sourceLineNo">042</span>            QueuedThreadPool::getQueueSize));<a name="line.42"></a>
+<span class="sourceLineNo">043</span>  }<a name="line.43"></a>
+<span class="sourceLineNo">044</span><a name="line.44"></a>
+<span class="sourceLineNo">045</span>  @Override<a name="line.45"></a>
+<span class="sourceLineNo">046</span>  public &lt;T extends Collector&gt; T register(CollectorRegistry registry) {<a name="line.46"></a>
+<span class="sourceLineNo">047</span>    if (queuedThreadPoolMap.isEmpty()) {<a name="line.47"></a>
+<span class="sourceLineNo">048</span>      throw new IllegalStateException("You must register at least one QueuedThreadPool.");<a name="line.48"></a>
+<span class="sourceLineNo">049</span>    }<a name="line.49"></a>
+<span class="sourceLineNo">050</span>    return super.register(registry);<a name="line.50"></a>
+<span class="sourceLineNo">051</span>  }<a name="line.51"></a>
+<span class="sourceLineNo">052</span><a name="line.52"></a>
+<span class="sourceLineNo">053</span>  private GaugeMetricFamily buildGauge(String metric, String help,<a name="line.53"></a>
+<span class="sourceLineNo">054</span>      Function&lt;QueuedThreadPool, Integer&gt; metricValueProvider) {<a name="line.54"></a>
+<span class="sourceLineNo">055</span>    final GaugeMetricFamily metricFamily = new GaugeMetricFamily(metric, help, LABEL_NAMES);<a name="line.55"></a>
+<span class="sourceLineNo">056</span>    queuedThreadPoolMap.forEach((key, value) -&gt; metricFamily.addMetric(<a name="line.56"></a>
+<span class="sourceLineNo">057</span>        Collections.singletonList(key),<a name="line.57"></a>
+<span class="sourceLineNo">058</span>        metricValueProvider.apply(value)<a name="line.58"></a>
+<span class="sourceLineNo">059</span>    ));<a name="line.59"></a>
+<span class="sourceLineNo">060</span>    return metricFamily;<a name="line.60"></a>
+<span class="sourceLineNo">061</span>  }<a name="line.61"></a>
+<span class="sourceLineNo">062</span>}<a name="line.62"></a>
 
 
 
