@@ -26,7 +26,7 @@
 <span class="sourceLineNo">018</span> * &lt;/pre&gt;<a name="line.18"></a>
 <span class="sourceLineNo">019</span> * Metrics being exported:<a name="line.19"></a>
 <span class="sourceLineNo">020</span> * &lt;pre&gt;<a name="line.20"></a>
-<span class="sourceLineNo">021</span> *   jvm_info{version="1.8.0_45-b14",vendor="Oracle Corporation"} 1.0<a name="line.21"></a>
+<span class="sourceLineNo">021</span> *   jvm_info{version="1.8.0_151-b12",vendor="Oracle Corporation",runtime="OpenJDK Runtime Environment",} 1.0<a name="line.21"></a>
 <span class="sourceLineNo">022</span> * &lt;/pre&gt;<a name="line.22"></a>
 <span class="sourceLineNo">023</span> */<a name="line.23"></a>
 <span class="sourceLineNo">024</span><a name="line.24"></a>
@@ -39,13 +39,18 @@
 <span class="sourceLineNo">031</span>        GaugeMetricFamily jvmInfo = new GaugeMetricFamily(<a name="line.31"></a>
 <span class="sourceLineNo">032</span>                "jvm_info",<a name="line.32"></a>
 <span class="sourceLineNo">033</span>                "JVM version info",<a name="line.33"></a>
-<span class="sourceLineNo">034</span>                Arrays.asList("version", "vendor"));<a name="line.34"></a>
-<span class="sourceLineNo">035</span>        jvmInfo.addMetric(Arrays.asList(System.getProperty("java.runtime.version", "unknown"), System.getProperty("java.vm.vendor", "unknown")), 1L);<a name="line.35"></a>
-<span class="sourceLineNo">036</span>        mfs.add(jvmInfo);<a name="line.36"></a>
-<span class="sourceLineNo">037</span><a name="line.37"></a>
-<span class="sourceLineNo">038</span>        return mfs;<a name="line.38"></a>
-<span class="sourceLineNo">039</span>    }<a name="line.39"></a>
-<span class="sourceLineNo">040</span>}<a name="line.40"></a>
+<span class="sourceLineNo">034</span>                Arrays.asList("version", "vendor", "runtime"));<a name="line.34"></a>
+<span class="sourceLineNo">035</span>        jvmInfo.addMetric(<a name="line.35"></a>
+<span class="sourceLineNo">036</span>                Arrays.asList(<a name="line.36"></a>
+<span class="sourceLineNo">037</span>                    System.getProperty("java.runtime.version", "unknown"),<a name="line.37"></a>
+<span class="sourceLineNo">038</span>                    System.getProperty("java.vm.vendor", "unknown"),<a name="line.38"></a>
+<span class="sourceLineNo">039</span>                    System.getProperty("java.runtime.name", "unknown")),<a name="line.39"></a>
+<span class="sourceLineNo">040</span>                    1L);<a name="line.40"></a>
+<span class="sourceLineNo">041</span>        mfs.add(jvmInfo);<a name="line.41"></a>
+<span class="sourceLineNo">042</span><a name="line.42"></a>
+<span class="sourceLineNo">043</span>        return mfs;<a name="line.43"></a>
+<span class="sourceLineNo">044</span>    }<a name="line.44"></a>
+<span class="sourceLineNo">045</span>}<a name="line.45"></a>
 
 
 
