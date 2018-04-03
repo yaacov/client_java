@@ -47,7 +47,7 @@ Summary:        API documentation for %{name}
 This package provides %{summary}.
 
 %prep
-%setup -q -n client_java-parent-%{version}
+%setup -q -n parent-%{version}
 
 %pom_disable_module simpleclient_caffeine
 %pom_disable_module simpleclient_dropwizard
