@@ -1,36 +1,5 @@
-diff --git a/base-0.3.0.patch b/base-0.3.0.patch
-index c7d0b08..e69de29 100644
---- a/base-0.3.0.patch
-+++ b/base-0.3.0.patch
-@@ -1,11 +0,0 @@
----- simpleclient_servlet/pom.xml.old	2018-04-09 12:10:59.146679962 +0300
--+++ simpleclient_servlet/pom.xml	2018-04-09 12:05:56.880608875 +0300
--@@ -70,7 +70,7 @@
--         <dependency>
--             <groupId>org.eclipse.jetty</groupId>
--             <artifactId>jetty-servlet</artifactId>
---            <version>8.1.7.v20120910</version>
--+            <version>8.1.17.v20150415</version>
--             <scope>test</scope>
--         </dependency>
--         <dependency>
-diff --git a/client_java.spec b/client_java.spec
-index 2c9f48d..5acffa0 100644
---- a/client_java.spec
-+++ b/client_java.spec
-@@ -14,7 +14,7 @@ BuildRequires: maven-plugin-bundle
- BuildRequires: mockito
- BuildRequires: assertj-core
- BuildRequires: jetty8-servlet
--BuildRequires: jboss-servlet-3.0-api
-+BuildRequires: glassfish-servlet-api
- BuildRequires: sonatype-oss-parent
- 
- %description
-diff --git a/simpleclient_servlet/pom.xml b/simpleclient_servlet/pom.xml
-index d5170e3..54b0bf6 100644
---- a/simpleclient_servlet/pom.xml
-+++ b/simpleclient_servlet/pom.xml
+--- simpleclient_servlet/pom.xml.old	2018-04-09 14:54:52.334492919 +0300
++++ simpleclient_servlet/pom.xml	2018-04-09 14:54:40.914566196 +0300
 @@ -51,7 +51,7 @@
          <dependency>
              <groupId>javax.servlet</groupId>
@@ -40,3 +9,12 @@ index d5170e3..54b0bf6 100644
              <scope>provided</scope>
          </dependency>
          <!-- Test Dependencies Follow -->
+@@ -70,7 +70,7 @@
+         <dependency>
+             <groupId>org.eclipse.jetty</groupId>
+             <artifactId>jetty-servlet</artifactId>
+-            <version>8.1.7.v20120910</version>
++            <version>8.1.17.v20150415</version>
+             <scope>test</scope>
+         </dependency>
+         <dependency>
