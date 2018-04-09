@@ -77,20 +77,21 @@ This package provides %{summary}.
 %install
 %mvn_install
 
-%files javadoc -f .mfiles-javadoc
-%doc LICENSE NOTICE
+%files -f .mfiles-simpleclient
+%doc README.md
+%license LICENSE NOTICE
 
 %files parent -f .mfiles-parent
 %license LICENSE NOTICE
 
-%files -f .mfiles-simpleclient
-%doc README.md
-%doc LICENSE NOTICE
-%dir %{_javadir}/%{name}
-
 %files common -f .mfiles-simpleclient_common
+%license LICENSE NOTICE
 
 %files servlet -f .mfiles-simpleclient_servlet
+%license LICENSE NOTICE
+
+%files javadoc -f .mfiles-javadoc
+%license LICENSE NOTICE
 
 %changelog
 * Mon Apr 2 2018 Yaacov Zamir <yzamir@redhat.com> - 0.3.0-1
