@@ -14,7 +14,7 @@ BuildRequires: maven-plugin-bundle
 BuildRequires: mockito
 BuildRequires: assertj-core
 BuildRequires: jetty8-servlet
-BuildRequires: jboss-servlet-3.0-api
+BuildRequires: glassfish-servlet-api
 BuildRequires: sonatype-oss-parent
 
 %description
