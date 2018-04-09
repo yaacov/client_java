@@ -13,6 +13,7 @@ BuildRequires: maven-local
 BuildRequires: maven-plugin-bundle
 BuildRequires: mockito
 BuildRequires: assertj-core
+BuildRequires: jetty-servlet
 %if 0%{?el7}
 BuildRequires: devtoolset-3-glassfish-servlet-api
 %else
