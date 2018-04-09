@@ -7,32 +7,31 @@ URL:           https://github.com/yaacov/client_java/
 Source0:       https://github.com/yaacov/client_java/archive/parent-%{version}.tar.gz
 BuildArch:     noarch
 
+Patch1: base-0.3.0.patch
+
 BuildRequires: maven-local
 BuildRequires: maven-plugin-bundle
-BuildRequires: maven-enforcer-plugin
-BuildRequires: maven-assembly-plugin
-BuildRequires: maven-compiler-plugin
-BuildRequires: maven-surefire-plugin
+BuildRequires: mockito
+BuildRequires: assertj-core
 BuildRequires: jetty8-servlet
-BuildRequires: jetty8-http
-BuildRequires: glassfish-servlet-api
+BuildRequires: jboss-servlet-3.0-api
 BuildRequires: sonatype-oss-parent
 
 %description
 Prometheus JVM Client supports Java, Clojure, Scala,
 JRuby, and anything else that runs on the JVM.
 
-%package common
-Summary:       Prometheus Java Simpleclient Common
-
-%description common
-Common code used by various modules of the Simpleclient.
-
 %package parent
 Summary:       Prometheus Java Suite Parent POM
 
 %description parent
 Prometheus Java Suite Parent POM.
+
+%package common
+Summary:       Prometheus Java Simpleclient Common
+
+%description common
+Common code used by various modules of the Simpleclient.
 
 %package servlet
 Summary:       Prometheus Java Simpleclient Servlet
@@ -60,7 +59,6 @@ This package provides %{summary}.
 %pom_disable_module simpleclient_log4j2
 %pom_disable_module simpleclient_logback
 %pom_disable_module simpleclient_pushgateway
-#%pom_disable_module simpleclient_servlet
 %pom_disable_module simpleclient_spring_web
 %pom_disable_module simpleclient_spring_boot
 %pom_disable_module simpleclient_jetty
@@ -70,6 +68,8 @@ This package provides %{summary}.
 
 %pom_remove_plugin :maven-deploy-plugin
 %pom_remove_plugin :maven-release-plugin
+
+%patch1 -p0
 
 %build
 %mvn_build -s
