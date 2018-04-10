@@ -11,17 +11,11 @@ Patch0: https://raw.githubusercontent.com/yaacov/client_java/master/base-0.3.0.p
 
 BuildRequires: maven-local
 BuildRequires: maven-plugin-bundle
-BuildRequires: mockito
-BuildRequires: assertj-core
-BuildRequires: jetty-servlet
-%if 0%{?el7}
-BuildRequires: devtoolset-3-glassfish-servlet-api
-%else
-BuildRequires: glassfish-servlet-api
-%endif
-
-
-BuildRequires: sonatype-oss-parent
+BuildRequires: mvn(org.mockito:mockito-core)
+BuildRequires: mvn(org.assertj:assertj-core)
+BuildRequires: mvn(org.sonatype.oss:oss-parent:pom:)
+BuildRequires: mvn(javax.servlet:javax.servlet-api)
+BuildRequires: mvn(org.eclipse.jetty:jetty-servlet:pom:8.1)
 
 %description
 Prometheus JVM Client supports Java, Clojure, Scala,
