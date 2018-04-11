@@ -16,7 +16,7 @@ BuildRequires: mvn(org.mockito:mockito-core)
 BuildRequires: mvn(org.assertj:assertj-core)
 BuildRequires: mvn(org.sonatype.oss:oss-parent:pom:)
 BuildRequires: mvn(javax.servlet:javax.servlet-api)
-BuildRequires: mvn(org.eclipse.jetty:jetty-servlet:pom:8.1)
+BuildRequires: mvn(org.eclipse.jetty:jetty-servlet)
 
 %description
 Prometheus JVM Client supports Java, Clojure, Scala,
