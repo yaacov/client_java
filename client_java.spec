@@ -7,8 +7,7 @@ URL:           https://github.com/yaacov/client_java/
 Source0:       https://github.com/yaacov/client_java/archive/parent-%{version}.tar.gz
 BuildArch:     noarch
 
-Patch0: https://raw.githubusercontent.com/yaacov/client_java/master/base-0.3.0.patch
-Patch1: https://raw.githubusercontent.com/yaacov/client_java/master/base1-0.3.0.patch
+Patch0: https://raw.githubusercontent.com/yaacov/client_java/master/jetty9.patch
 
 BuildRequires: maven-local
 BuildRequires: maven-plugin-bundle
@@ -71,7 +70,6 @@ This package provides %{summary}.
 %pom_remove_plugin :maven-release-plugin
 
 %patch0 -p0
-%patch1 -p0
 
 %build
 %mvn_build -s
